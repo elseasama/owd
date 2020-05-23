@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+    <style>
+        table 
+        {
+            width: 100%;
+            font: 17px Calibri;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <p>Reported Cases and Deaths by Country</p>
+    <div id="showData"></div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $.getJSON("https://covid.ourworldindata.org/data/owid-covid-data.json", function (data) {
+
+            var arrItems = [];
+            $.each(data, function (index, value) {
+                arrItems.push(value);
+            });
+
+         
+            var col = [];
+            for (var i = 0; i < arrItems.length; i++) {
+                for (var key in arrItems[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+
+          
+
+            var tr = table.insertRow(-1);                  
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");      
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            
+            for (var i = 0; i < arrItems.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+                    var tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = arrItems[i][col[j]];
+                }
+            }
+
+            
+            var divContainer = document.getElementById("showData");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(table);
+        });
+    });
+</script>
+</html>
